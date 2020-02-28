@@ -1,36 +1,26 @@
-﻿using ExpectedObjects;
-using Lab.Entities;
-using NUnit.Framework;
-using NUnit.Framework.Internal;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ExpectedObjects;
+using Lab.Entities;
+using NUnit.Framework;
 
 namespace CSharpAdvanceDesignTests
 {
-    [TestFixture()]
-    [Ignore("not yet")]
+    [TestFixture]
+    //[Ignore("not yet")]
     public class JoeySelectTests
     {
-        [Test]
-        public void replace_http_to_https()
-        {
-            var urls = GetUrls();
-
-            var actual = JoeySelect(urls);
-            var expected = new List<string>
-            {
-                "https://tw.yahoo.com",
-                "https://facebook.com",
-                "https://twitter.com",
-                "https://github.com",
-            };
-
-            expected.ToExpectedObject().ShouldEqual(actual.ToList());
-        }
-
         private IEnumerable<string> JoeySelect(IEnumerable<string> urls)
         {
-            throw new System.NotImplementedException();
+            var result = new List<string>();
+
+            foreach (var url in urls)
+            {
+                result.Add(url.Replace("http:", "https:"));
+            }
+
+            return result;
         }
 
         private static IEnumerable<string> GetUrls()
@@ -49,6 +39,52 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Tom", LastName = "Li"},
                 new Employee {FirstName = "David", LastName = "Chen"}
             };
+        }
+
+        [Test]
+        public void replace_http_to_https()
+        {
+            var urls = GetUrls();
+
+            var actual = JoeySelect(urls);
+            var expected = new List<string>
+            {
+                "https://tw.yahoo.com",
+                "https://facebook.com",
+                "https://twitter.com",
+                "https://github.com"
+            };
+
+            expected.ToExpectedObject().ShouldEqual(actual.ToList());
+        }
+
+        [Test]
+        public void append_port_9191_to_urls()
+        {
+            var urls = GetUrls();
+
+            var actual = JoeySelectWithPort(urls);
+            var expected = new List<string>
+            {
+                "http://tw.yahoo.com:9191",
+                "https://facebook.com:9191",
+                "https://twitter.com:9191",
+                "http://github.com:9191",
+            };
+
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+
+        private IEnumerable<string> JoeySelectWithPort(IEnumerable<string> urls)
+        {
+            var result = new List<string>();
+
+            foreach (var url in urls)
+            {
+                result.Add($"{url}:9191");
+            }
+
+            return result;
         }
     }
 }
