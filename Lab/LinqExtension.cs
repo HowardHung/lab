@@ -6,23 +6,28 @@ namespace Lab
 {
     public static class LinqExtension
     {
-        public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> products, Func<TSource, bool> predicate)
+        public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            var result = new List<TSource>();
-            foreach (var source in products)
-                if (predicate(source))
-                    result.Add(source);
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                if (predicate(enumerator.Current))
+                {
+                    yield return enumerator.Current;
+                }
 
-            return result;
+            }
         }
 
-        public static IEnumerable<TResult> JoeySelect<TSource, TResult>(this IEnumerable<TSource> sources,
+
+        public static IEnumerable<TResult> JoeySelect<TSource, TResult>(this IEnumerable<TSource> source,
             Func<TSource, TResult> selector)
         {
-            var result = new List<TResult>();
-            foreach (var source in sources) result.Add(selector(source));
-
-            return result;
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+               yield return selector(enumerator.Current);
+            }
         }
 
         public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> source, Func<TSource, int, bool> predict)
@@ -44,17 +49,16 @@ namespace Lab
 
         }
 
-        public static IEnumerable<TSource> JoeySelectWithIndex<TSource>(this IEnumerable<TSource> source, Func<TSource, int, TSource> predict)
+        public static IEnumerable<TSource> JoeySelect<TSource>(this IEnumerable<TSource> source, Func<TSource, int, TSource> predict)
         {
             var index = 0;
-            var result = new List<TSource>();
-            foreach (var item in source)
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                result.Add(predict(item, index));
+                yield return (predict(enumerator.Current, index));
                 index++;
             }
 
-            return result;
         }
     }
 }
