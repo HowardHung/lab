@@ -24,5 +24,24 @@ namespace Lab
 
             return result;
         }
+
+        public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> source, Func<TSource, int, bool> predict)
+        {
+            var result = new List<TSource>();
+            var index = 0;
+            foreach (var item in source)
+            {
+                if (predict(item, index))
+                {
+                    result.Add(item);
+                }
+
+                index++;
+            }
+
+            return result;
+
+
+        }
     }
 }

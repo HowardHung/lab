@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ExpectedObjects;
+using Lab;
 using Lab.Entities;
 using NUnit.Framework;
 
@@ -87,8 +89,7 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "May", LastName = "Chen"}
             };
 
-            Func<Employee, bool> predicate = e => e.FirstName.Length < 5;
-            var actual = employees.JoeyWhere(predicate);
+            var actual = employees.JoeyWhere(e => e.FirstName.Length < 5);
 
             var expected = new List<Employee>
             {
@@ -96,6 +97,14 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "May", LastName = "Chen"}
             };
 
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+        [Test]
+        public void find_positive_number_the_first_one_and_skip_second_one_and_take_others()
+        {
+            var numbers = new List<int> { 1, 2, 3, 4, -5 };
+            var actual = numbers.JoeyWhere((number, index) => (index == 0 || index > 1) && number > 0);
+            var expected = new List<int> { 1, 3, 4 };
             expected.ToExpectedObject().ShouldMatch(actual);
         }
     }
