@@ -6,10 +6,9 @@ using NUnit.Framework;
 
 namespace CSharpAdvanceDesignTests
 {
-    [TestFixture]
-    public class JoeyWhereTests
+    public static class LinqExtension
     {
-        private List<TSource> JoeyWhere<TSource>(List<TSource> products, Func<TSource, bool> predicate)
+        public static List<TSource> JoeyWhere<TSource>(this List<TSource> products, Func<TSource, bool> predicate)
         {
             var result = new List<TSource>();
             foreach (var source in products)
@@ -18,6 +17,11 @@ namespace CSharpAdvanceDesignTests
 
             return result;
         }
+    }
+
+    [TestFixture]
+    public class JoeyWhereTests
+    {
 
         [Test]
         public void find_products_that_price_between_200_and_500()
@@ -34,7 +38,7 @@ namespace CSharpAdvanceDesignTests
                 new Product {Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo"}
             };
 
-            var actual = JoeyWhere(products, product => product.Price > 200 && product.Price < 500);
+            var actual = products.JoeyWhere(product => product.Price > 200 && product.Price < 500);
 
             var expected = new List<Product>
             {
@@ -62,7 +66,7 @@ namespace CSharpAdvanceDesignTests
             };
 
             Func<Product, bool> predicate = product => product.Price > 200 && product.Price < 500 && product.Cost < 30;
-            var actual = JoeyWhere(products, predicate);
+            var actual = products.JoeyWhere(predicate);
 
             var expected = new List<Product>
             {
@@ -84,7 +88,7 @@ namespace CSharpAdvanceDesignTests
             };
 
             Func<Employee, bool> predicate = e => e.FirstName.Length < 5;
-            var actual = JoeyWhere(employees, predicate);
+            var actual = employees.JoeyWhere(predicate);
 
             var expected = new List<Employee>
             {
