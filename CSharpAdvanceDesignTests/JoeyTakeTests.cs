@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ExpectedObjects;
+using Lab;
 using Lab.Entities;
 using NUnit.Framework;
 
@@ -10,26 +11,6 @@ namespace CSharpAdvanceDesignTests
     //[Ignore("not yet")]
     public class JoeyTakeTests
     {
-        private IEnumerable<Employee> JoeyTake(IEnumerable<Employee> employees, int count)
-        {
-            var enumerator = employees.GetEnumerator();
-            var index = 0;
-            while (enumerator.MoveNext())
-            {
-                var enumeratorCurrent = enumerator.Current;
-                if (index < count)
-                {
-                    yield return enumeratorCurrent;
-                }
-                else
-                {
-                    yield break;
-                }
-
-                index++;
-            }
-        }
-
         private static IEnumerable<Employee> GetEmployees()
         {
             return new List<Employee>
@@ -47,7 +28,7 @@ namespace CSharpAdvanceDesignTests
         {
             var employees = GetEmployees();
 
-            var actual = JoeyTake(employees, 2);
+            var actual = employees.JoeyTake(2);
 
             var expected = new List<Employee>
             {
@@ -62,7 +43,7 @@ namespace CSharpAdvanceDesignTests
         {
             var employees = GetEmployees();
 
-            var actual = JoeyTake(employees, 3);
+            var actual = employees.JoeyTake(3);
 
             var expected = new List<Employee>
             {
@@ -71,6 +52,17 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "David", LastName = "Chen"}
             };
 
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
+        [Test]
+        public void take_4_names()
+        {
+            var names = new[] { "Tom", "Joey", "David" };
+
+            var actual = names.JoeyTake(4);
+            
+
+            var expected = new[] { "Tom", "Joey", "David" };
             expected.ToExpectedObject().ShouldMatch(actual);
         }
     }
