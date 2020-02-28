@@ -9,12 +9,12 @@ namespace CSharpAdvanceDesignTests
     [TestFixture]
     public class JoeyWhereTests
     {
-        private List<Product> JoeyWhere(List<Product> products, Func<Product, bool> predicate)
+        private List<TSource> JoeyWhere<TSource>(List<TSource> products, Func<TSource, bool> predicate)
         {
-            var result = new List<Product>();
-            foreach (var product in products)
-                if (predicate(product))
-                    result.Add(product);
+            var result = new List<TSource>();
+            foreach (var source in products)
+                if (predicate(source))
+                    result.Add(source);
 
             return result;
         }
