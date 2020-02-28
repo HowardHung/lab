@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ExpectedObjects;
 using Lab.Entities;
 using NUnit.Framework;
@@ -8,11 +9,11 @@ namespace CSharpAdvanceDesignTests
     [TestFixture]
     public class JoeyWhereTests
     {
-        private List<Product> JoeyWhere(List<Product> products)
+        private List<Product> JoeyWhere(List<Product> products, Func<Product, bool> Predicate)
         {
             var result = new List<Product>();
             foreach (var product in products)
-                if (product.Price > 200 && product.Price < 500)
+                if (Predicate(product))
                     result.Add(product);
 
             return result;
@@ -43,7 +44,7 @@ namespace CSharpAdvanceDesignTests
                 new Product {Id = 8, Cost = 18, Price = 780, Supplier = "Yahoo"}
             };
 
-            var actual = JoeyWhere(products);
+            var actual = JoeyWhere(products, product => product.Price > 200 && product.Price < 500);
 
             var expected = new List<Product>
             {
