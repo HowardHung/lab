@@ -83,5 +83,21 @@ namespace CSharpAdvanceDesignTests
             };
             expected.ToExpectedObject().ShouldMatch(names);
         }
+        [Test]
+        public void append_seq_no_first()
+        {
+            var urls = GetUrls();
+
+            var actual = urls.JoeySelectWithIndex((url, index) => $"{index+1}. {url}:9191");
+            var expected = new List<string>
+            {
+                "1. http://tw.yahoo.com:9191",
+                "2. https://facebook.com:9191",
+                "3. https://twitter.com:9191",
+                "4. http://github.com:9191",
+            };
+
+            expected.ToExpectedObject().ShouldMatch(actual);
+        }
     }
 }

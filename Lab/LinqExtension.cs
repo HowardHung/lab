@@ -43,5 +43,18 @@ namespace Lab
 
 
         }
+
+        public static IEnumerable<TSource> JoeySelectWithIndex<TSource>(this IEnumerable<TSource> source, Func<TSource, int, TSource> predict)
+        {
+            var index = 0;
+            var result = new List<TSource>();
+            foreach (var item in source)
+            {
+                result.Add(predict(item, index));
+                index++;
+            }
+
+            return result;
+        }
     }
 }

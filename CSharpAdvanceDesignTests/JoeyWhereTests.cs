@@ -10,14 +10,22 @@ namespace CSharpAdvanceDesignTests
 {
     public static class LinqExtension
     {
-        public static List<TSource> JoeyWhere<TSource>(this List<TSource> products, Func<TSource, bool> predicate)
+        public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            var result = new List<TSource>();
-            foreach (var source in products)
-                if (predicate(source))
-                    result.Add(source);
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                if (predicate(enumerator.Current))
+                {
+                    yield return enumerator.Current;
+                }
+            } 
+            //var result = new List<TSource>();
+            //foreach (var item in source)
+            //    if (predicate(item))
+            //        result.Add(item);
 
-            return result;
+            //return result;
         }
     }
 
