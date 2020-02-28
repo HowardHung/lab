@@ -11,18 +11,6 @@ namespace CSharpAdvanceDesignTests
     //[Ignore("not yet")]
     public class JoeySelectTests
     {
-        private IEnumerable<string> JoeySelect(IEnumerable<string> urls, Func<string, string> selector)
-        {
-            var result = new List<string>();
-
-            foreach (var url in urls)
-            {
-                result.Add(selector(url));
-            }
-
-            return result;
-        }
-
         private static IEnumerable<string> GetUrls()
         {
             yield return "http://tw.yahoo.com";
@@ -39,6 +27,32 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Tom", LastName = "Li"},
                 new Employee {FirstName = "David", LastName = "Chen"}
             };
+        }
+
+        private IEnumerable<TResult> JoeySelect<TSource, TResult>(IEnumerable<TSource> sources,
+            Func<TSource, TResult> selector)
+        {
+            var result = new List<TResult>();
+            foreach (var source in sources) result.Add(selector(source));
+
+            return result;
+        }
+
+        [Test]
+        public void append_port_9191_to_urls()
+        {
+            var urls = GetUrls();
+
+            var actual = JoeySelect(urls, url => $"{url}:9191");
+            var expected = new List<string>
+            {
+                "http://tw.yahoo.com:9191",
+                "https://facebook.com:9191",
+                "https://twitter.com:9191",
+                "http://github.com:9191"
+            };
+
+            expected.ToExpectedObject().ShouldMatch(actual);
         }
 
         [Test]
@@ -59,22 +73,6 @@ namespace CSharpAdvanceDesignTests
         }
 
         [Test]
-        public void append_port_9191_to_urls()
-        {
-            var urls = GetUrls();
-
-            var actual = JoeySelect(urls, url1 => $"{url1}:9191");
-            var expected = new List<string>
-            {
-                "http://tw.yahoo.com:9191",
-                "https://facebook.com:9191",
-                "https://twitter.com:9191",
-                "http://github.com:9191",
-            };
-
-            expected.ToExpectedObject().ShouldMatch(actual);
-        }
-        [Test]
         public void select_full_name()
         {
             var employees = new List<Employee>
@@ -84,19 +82,14 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "David", LastName = "Chen"}
             };
 
-            var names = JoeySelectForEmployee(employees, e => $"{e.FirstName} {e.LastName}");
+            var names = JoeySelect(employees, e => $"{e.FirstName} {e.LastName}");
             var expected = new[]
             {
                 "Joey Chen",
                 "Tom Li",
-                "David Chen",
+                "David Chen"
             };
             expected.ToExpectedObject().ShouldMatch(names);
-        }
-
-        private List<string> JoeySelectForEmployee(List<Employee> employees, Func<Employee, string> selector)
-        {
-            throw new NotImplementedException();
         }
     }
 }
