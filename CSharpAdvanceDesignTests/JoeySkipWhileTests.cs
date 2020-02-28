@@ -11,6 +11,8 @@ namespace CSharpAdvanceDesignTests
     //[Ignore("not yet")]
     public class JoeySkipWhileTests
     {
+        private readonly GroupSumTests _groupSumTests = new GroupSumTests();
+
         private IEnumerable<Card> JoeySkipWhile(IEnumerable<Card> cards, Func<Card, bool> predicate)
         {
             var enumerator = cards.GetEnumerator();
