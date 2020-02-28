@@ -11,13 +11,13 @@ namespace CSharpAdvanceDesignTests
     //[Ignore("not yet")]
     public class JoeySelectTests
     {
-        private IEnumerable<string> JoeySelect(IEnumerable<string> urls)
+        private IEnumerable<string> JoeySelect(IEnumerable<string> urls, Func<string, string> selector)
         {
             var result = new List<string>();
 
             foreach (var url in urls)
             {
-                result.Add(url.Replace("http:", "https:"));
+                result.Add(selector(url));
             }
 
             return result;
@@ -46,7 +46,7 @@ namespace CSharpAdvanceDesignTests
         {
             var urls = GetUrls();
 
-            var actual = JoeySelect(urls);
+            var actual = JoeySelect(urls, url => url.Replace("http:", "https:"));
             var expected = new List<string>
             {
                 "https://tw.yahoo.com",
@@ -63,7 +63,7 @@ namespace CSharpAdvanceDesignTests
         {
             var urls = GetUrls();
 
-            var actual = JoeySelectWithPort(urls);
+            var actual = JoeySelect(urls, url1 => $"{url1}:9191");
             var expected = new List<string>
             {
                 "http://tw.yahoo.com:9191",
@@ -74,17 +74,29 @@ namespace CSharpAdvanceDesignTests
 
             expected.ToExpectedObject().ShouldMatch(actual);
         }
-
-        private IEnumerable<string> JoeySelectWithPort(IEnumerable<string> urls)
+        [Test]
+        public void select_full_name()
         {
-            var result = new List<string>();
-
-            foreach (var url in urls)
+            var employees = new List<Employee>
             {
-                result.Add($"{url}:9191");
-            }
+                new Employee {FirstName = "Joey", LastName = "Chen"},
+                new Employee {FirstName = "Tom", LastName = "Li"},
+                new Employee {FirstName = "David", LastName = "Chen"}
+            };
 
-            return result;
+            var names = JoeySelectForEmployee(employees, e => $"{e.FirstName} {e.LastName}");
+            var expected = new[]
+            {
+                "Joey Chen",
+                "Tom Li",
+                "David Chen",
+            };
+            expected.ToExpectedObject().ShouldMatch(names);
+        }
+
+        private List<string> JoeySelectForEmployee(List<Employee> employees, Func<Employee, string> selector)
+        {
+            throw new NotImplementedException();
         }
     }
 }
