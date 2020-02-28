@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Lab.Entities;
 
 namespace Lab
 {
@@ -78,6 +79,22 @@ namespace Lab
                 }
 
                 index++;
+            }
+        }
+
+        public static IEnumerable<Employee> JoeySkip(this IEnumerable<Employee> employees, int count)
+        {
+            var enumerator = employees.GetEnumerator();
+            var index = 0;
+            while (enumerator.MoveNext())
+            {
+                if (index>=count)
+                {
+                    yield return enumerator.Current;
+                }
+
+                index++;
+
             }
         }
     }
