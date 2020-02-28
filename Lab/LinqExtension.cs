@@ -15,5 +15,14 @@ namespace Lab
 
             return result;
         }
+
+        public static IEnumerable<TResult> JoeySelect<TSource, TResult>(this IEnumerable<TSource> sources,
+            Func<TSource, TResult> selector)
+        {
+            var result = new List<TResult>();
+            foreach (var source in sources) result.Add(selector(source));
+
+            return result;
+        }
     }
 }

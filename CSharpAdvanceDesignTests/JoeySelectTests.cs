@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ExpectedObjects;
+using Lab;
 using Lab.Entities;
 using NUnit.Framework;
 
@@ -29,21 +30,12 @@ namespace CSharpAdvanceDesignTests
             };
         }
 
-        private IEnumerable<TResult> JoeySelect<TSource, TResult>(IEnumerable<TSource> sources,
-            Func<TSource, TResult> selector)
-        {
-            var result = new List<TResult>();
-            foreach (var source in sources) result.Add(selector(source));
-
-            return result;
-        }
-
         [Test]
         public void append_port_9191_to_urls()
         {
             var urls = GetUrls();
 
-            var actual = JoeySelect(urls, url => $"{url}:9191");
+            var actual = urls.JoeySelect(url => $"{url}:9191");
             var expected = new List<string>
             {
                 "http://tw.yahoo.com:9191",
@@ -60,7 +52,7 @@ namespace CSharpAdvanceDesignTests
         {
             var urls = GetUrls();
 
-            var actual = JoeySelect(urls, url => url.Replace("http:", "https:"));
+            var actual = urls.JoeySelect(url => url.Replace("http:", "https:"));
             var expected = new List<string>
             {
                 "https://tw.yahoo.com",
@@ -82,7 +74,7 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "David", LastName = "Chen"}
             };
 
-            var names = JoeySelect(employees, e => $"{e.FirstName} {e.LastName}");
+            var names = employees.JoeySelect(e => $"{e.FirstName} {e.LastName}");
             var expected = new[]
             {
                 "Joey Chen",
