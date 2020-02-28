@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ExpectedObjects;
+using Lab;
 using NUnit.Framework;
 
 namespace CSharpAdvanceDesignTests
@@ -25,33 +27,11 @@ namespace CSharpAdvanceDesignTests
             };
 
             //sum of all Saving of each group which 3 Account per group
-            var actual = MyGroupSum(accounts);
+            var actual = accounts.MyGroupSum(current => current.Saving, 3);
 
             var expected = new[] {60, 150, 240, 210};
 
             expected.ToExpectedObject().ShouldMatch(actual);
-        }
-
-        private IEnumerable<int> MyGroupSum(IEnumerable<Account> accounts)
-        {
-            var enumerator = accounts.GetEnumerator();
-            var groupCount = 3;
-            var index = 0;
-            var sum = 0;
-            while (enumerator.MoveNext())
-            {
-                var current = enumerator.Current;
-                if (groupCount > index++)
-                {
-                    sum += current.Saving;
-                }
-                else
-                {
-                    yield return sum;
-                    sum = 0;
-                    index = 0;
-                }
-            }
         }
     }
 

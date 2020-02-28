@@ -97,5 +97,26 @@ namespace Lab
 
             }
         }
+
+        public static IEnumerable<int> MyGroupSum<TSource>(this IEnumerable<TSource> source, Func<TSource, int> currentSaving, int count)
+        {
+            var enumerator = source.GetEnumerator();
+            var index = 0;
+            var sum = 0;
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (count > index++)
+                {
+                    sum += currentSaving(current);
+                }
+                else
+                {
+                    yield return sum;
+                    sum = 0;
+                    index = 0;
+                }
+            }
+        }
     }
 }
