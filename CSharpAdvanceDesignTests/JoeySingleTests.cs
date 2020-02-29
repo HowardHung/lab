@@ -44,7 +44,7 @@ namespace CSharpAdvanceDesignTests
         private Girl JoeySingle(IEnumerable<Girl> girls)
         {
             var enumerator = girls.GetEnumerator();
-            if (enumerator.MoveNext())
+            if (!enumerator.MoveNext())
             {
                 throw new InvalidOperationException("no one");
             }

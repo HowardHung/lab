@@ -58,28 +58,13 @@ namespace CSharpAdvanceDesignTests
             return hasMatch ? employee : throw new InvalidOperationException();
         }
 
-        [Test]
-        public void get_null_when_employee_is_empty()
-        {
-            var employees = new List<Employee>();
-
-            var actual = JoeyLastOrDefault(employees);
-            Assert.IsNull(actual);
-        }
-
         private Tsource JoeyLastOrDefault<Tsource>(IEnumerable<Tsource> employees)
         {
             var enumerator = employees.GetEnumerator();
-            if (!enumerator.MoveNext())
-            {
-                return default(Tsource);
-            }
+            if (!enumerator.MoveNext()) return default;
 
             var last = enumerator.Current;
-            while (enumerator.MoveNext())
-            {
-                last=enumerator.Current;
-            }
+            while (enumerator.MoveNext()) last = enumerator.Current;
 
             return last;
 
@@ -92,6 +77,19 @@ namespace CSharpAdvanceDesignTests
             //}
 
             //return employee;
+        }
+
+        private TSource JoeyLastOrDefaultWithCondition<TSource>(IEnumerable<TSource> employees, Func<TSource, bool> predicate)
+        {
+            var enumerator = employees.GetEnumerator();
+            var employee = default(TSource);
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (predicate(current)) employee = current;
+            }
+
+            return employee;
         }
 
         [Test]
@@ -128,6 +126,23 @@ namespace CSharpAdvanceDesignTests
                 .ToExpectedObject().ShouldMatch(employee);
         }
 
+        [Test]
+        public void get_last_employee_last_name_is_Chen()
+        {
+            var employees = new List<Employee>
+            {
+                new Employee {FirstName = "Tom", LastName = "Li"},
+                new Employee {FirstName = "Joey", LastName = "Chen"},
+                new Employee {FirstName = "David", LastName = "Chen"},
+                new Employee {FirstName = "Cash", LastName = "Li"}
+            };
+
+            var employee = JoeyLastOrDefaultWithCondition(employees, current => current?.LastName == "Chen");
+
+            new Employee {FirstName = "David", LastName = "Chen"}
+                .ToExpectedObject().ShouldMatch(employee);
+        }
+
 
         [Test]
         public void get_last_employee_when_no_girls()
@@ -138,6 +153,15 @@ namespace CSharpAdvanceDesignTests
 
             TestDelegate action = () => JoeyLast(employees);
             Assert.Throws<InvalidOperationException>(action);
+        }
+
+        [Test]
+        public void get_null_when_employee_is_empty()
+        {
+            var employees = new List<Employee>();
+
+            var actual = JoeyLastOrDefault(employees);
+            Assert.IsNull(actual);
         }
     }
 }
