@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ExpectedObjects;
+using Lab;
 using Lab.Entities;
 using NUnit.Framework;
 
@@ -12,9 +13,8 @@ namespace CSharpAdvanceDesignTests
     public class JoeyOrderByTests
     {
         private IEnumerable<Employee> JoeyOrderByLastName(
-            IEnumerable<Employee> employees,
-            Func<Employee, string> firstKeySelector,
-            IComparer<string> firstKeyComparer,
+            IEnumerable<Employee> employees, 
+            IComparer<Employee> combineKeyComparer,
             Func<Employee, string> secondKeySelector,
             IComparer<string> secondKeyComparer)
         {
@@ -26,12 +26,13 @@ namespace CSharpAdvanceDesignTests
                 for (var i = 1; i < elements.Count; i++)
                 {
                     var employee = elements[i];
-                    if (firstKeyComparer.Compare(firstKeySelector(employee), firstKeySelector(minElement)) < 0)
+                    var firstCompareResult = combineKeyComparer.Compare(employee, minElement);
+                    if (firstCompareResult < 0)
                     {
                         minElement = employee;
                         index = i;
                     }
-                    else if (firstKeyComparer.Compare(firstKeySelector(employee), firstKeySelector(minElement)) == 0)
+                    else if (firstCompareResult == 0)
                     {
                         if (secondKeyComparer.Compare(secondKeySelector(employee), minElement.FirstName) < 0)
                         {
@@ -82,11 +83,7 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"}
             };
 
-            var actual = JoeyOrderByLastName(employees,
-                employee => employee.LastName, 
-                Comparer<string>.Default,
-                employee => employee.FirstName,
-                Comparer<string>.Default);
+            var actual = JoeyOrderByLastName(employees, new CombineKeyComparer(employee => employee.LastName, Comparer<string>.Default), employee => employee.FirstName, Comparer<string>.Default);
 
             var expected = new[]
             {
