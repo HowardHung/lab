@@ -9,7 +9,7 @@ namespace Lab
         public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
-            return JoeyWhere(source, ((x, i) => predicate(x)));
+            return JoeyWhere(source, (x, i) => predicate(x));
             //var enumerator = source.GetEnumerator();
             //while (enumerator.MoveNext())
             //{
@@ -45,13 +45,14 @@ namespace Lab
         public static IEnumerable<TResult> JoeySelect<TSource, TResult>(this IEnumerable<TSource> source,
             Func<TSource, TResult> selector)
         {
-            var enumerator = source.GetEnumerator();
-            while (enumerator.MoveNext()) yield return selector(enumerator.Current);
+            return JoeySelect(source, (x, i) => selector(x));
+            //var enumerator = source.GetEnumerator();
+            //while (enumerator.MoveNext()) yield return selector(enumerator.Current);
         }
 
 
-        public static IEnumerable<TSource> JoeySelect<TSource>(this IEnumerable<TSource> source,
-            Func<TSource, int, TSource> predict)
+        public static IEnumerable<TResult> JoeySelect<TSource, TResult>(this IEnumerable<TSource> source,
+            Func<TSource, int, TResult> predict)
         {
             var index = 0;
             var enumerator = source.GetEnumerator();
