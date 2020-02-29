@@ -40,22 +40,22 @@ namespace CSharpAdvanceDesignTests
             //return result;
         }
 
-        public TSource JoeyLast<TSource>(List<TSource> source, Func<TSource, bool> predicate)
+        public  Employee JoeyLast(IEnumerable<Employee> employees, Func<Employee, bool> predicate)
         {
-            var enumerator = source.GetEnumerator();
-            if (!enumerator.MoveNext()) throw new InvalidOperationException($"{nameof(source)} is empty");
-
-            var last = enumerator.Current;
-
+            var enumerator = employees.GetEnumerator();
+            var hasMatch = false;
+            Employee employee = null;
             while (enumerator.MoveNext())
             {
                 var current = enumerator.Current;
-                if (predicate(current)) last = current;
+                if (predicate(current))
+                {
+                    hasMatch = true;
+                    employee = current;
+                }
             }
 
-            if (predicate(last)) return last ;
-
-            throw new InvalidOperationException($"{nameof(source)} is empty");
+            return hasMatch ? employee : throw new InvalidOperationException();
         }
 
         [Test]
