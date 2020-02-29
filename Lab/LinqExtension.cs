@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lab.Entities;
 
 namespace Lab
 {
@@ -97,6 +98,39 @@ namespace Lab
                     index = 0;
                 }
             }
+        }
+
+        public static bool JoeyAll<TSource>(this IEnumerable<TSource> girls, Func<TSource, bool> predicate)
+        {
+            var enumerator = girls.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (!predicate(current))
+                    return false;
+            }
+
+            return true;
+
+        }
+
+        public static bool JoeyAny(this IEnumerable<Employee> employees)
+        {
+            return employees.GetEnumerator().MoveNext();
+        }
+
+        public static bool JoeyAny<TSource>(this IEnumerable<TSource> numbers, Func<TSource, bool> predicate)
+        {
+            var enumerator = numbers.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+                if (predicate(current))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
