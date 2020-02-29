@@ -11,7 +11,7 @@ namespace CSharpAdvanceDesignTests
     //[Ignore("not yet")]
     public class JoeyOrderByTests
     {
-        private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees, Func<Employee, string> firstSelector, Func<Employee, string> secondSelector)
+        private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees, Func<Employee, string> firstSelector)
         {
             var stringComparer = Comparer<string>.Default;
             var elements = employees.ToList();
@@ -29,7 +29,7 @@ namespace CSharpAdvanceDesignTests
                     }
                     else if (stringComparer.Compare(firstSelector(employee), firstSelector(minElement)) == 0)
                     {
-                        if (stringComparer.Compare(secondSelector(employee), secondSelector(minElement)) < 0)
+                        if (stringComparer.Compare(employee.FirstName, minElement.FirstName) < 0)
                         {
                             minElement = employee;
                             index = i;
@@ -78,7 +78,7 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"}
             };
 
-            var actual = JoeyOrderByLastName(employees, employee => employee.LastName, employee1 => employee1.FirstName);
+            var actual = JoeyOrderByLastName(employees, employee => employee.LastName);
 
             var expected = new[]
             {
