@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ExpectedObjects;
 using Lab.Entities;
@@ -10,7 +11,7 @@ namespace CSharpAdvanceDesignTests
     //[Ignore("not yet")]
     public class JoeyOrderByTests
     {
-        private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees)
+        private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees, Func<Employee, string> firstSelector, Func<Employee, string> secondSelector)
         {
             var stringComparer = Comparer<string>.Default;
             var elements = employees.ToList();
@@ -20,16 +21,17 @@ namespace CSharpAdvanceDesignTests
                 var index = 0;
                 for (var i = 1; i < elements.Count; i++)
                 {
-                    if (stringComparer.Compare(elements[i].LastName, minElement.LastName) < 0)
+                    var employee = elements[i];
+                    if (stringComparer.Compare(firstSelector(employee), firstSelector(minElement)) < 0)
                     {
-                        minElement = elements[i];
+                        minElement = employee;
                         index = i;
                     }
-                    else if (stringComparer.Compare(elements[i].LastName, minElement.LastName) == 0)
+                    else if (stringComparer.Compare(firstSelector(employee), firstSelector(minElement)) == 0)
                     {
-                        if (stringComparer.Compare(elements[i].FirstName, minElement.FirstName) < 0)
+                        if (stringComparer.Compare(secondSelector(employee), secondSelector(minElement)) < 0)
                         {
-                            minElement = elements[i];
+                            minElement = employee;
                             index = i;
                         }
                     }
@@ -76,7 +78,7 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"}
             };
 
-            var actual = JoeyOrderByLastName(employees);
+            var actual = JoeyOrderByLastName(employees, employee => employee.LastName, employee1 => employee1.FirstName);
 
             var expected = new[]
             {
