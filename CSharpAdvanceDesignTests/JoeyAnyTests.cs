@@ -1,26 +1,17 @@
-﻿using Lab.Entities;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Lab.Entities;
+using NUnit.Framework;
 
 namespace CSharpAdvanceDesignTests
 {
     [TestFixture]
-    [Ignore("not yet")]
+    //[Ignore("not yet")]
     public class JoeyAnyTests
     {
-        [Test]
-        public void three_employees()
+        private bool JoeyAny(IEnumerable<Employee> employees)
         {
-            var emptyEmployees = new Employee[]
-            {
-                new Employee(),
-                new Employee(),
-                new Employee(),
-            };
-
-            var actual = JoeyAny(emptyEmployees);
-            Assert.IsTrue(actual);
+            return employees.GetEnumerator().MoveNext();
         }
 
         [Test]
@@ -34,9 +25,18 @@ namespace CSharpAdvanceDesignTests
             Assert.IsFalse(actual);
         }
 
-        private bool JoeyAny(IEnumerable<Employee> employees)
+        [Test]
+        public void three_employees()
         {
-            throw new NotImplementedException();
+            var emptyEmployees = new[]
+            {
+                new Employee(),
+                new Employee(),
+                new Employee()
+            };
+
+            var actual = JoeyAny(emptyEmployees);
+            Assert.IsTrue(actual);
         }
     }
 }

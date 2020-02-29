@@ -78,7 +78,7 @@ namespace Lab
         }
 
         public static IEnumerable<int> MyGroupSum<TSource>(this IEnumerable<TSource> source,
-            Func<TSource, int> wantAdd, int count)
+            Func<TSource, int> wantAdd, int pageSize)
         {
             var enumerator = source.GetEnumerator();
             var index = 0;
@@ -86,7 +86,7 @@ namespace Lab
             while (enumerator.MoveNext())
             {
                 var current = enumerator.Current;
-                if (count > index++)
+                if (pageSize > index++)
                 {
                     sum += wantAdd(current);
                 }
