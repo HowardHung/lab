@@ -40,7 +40,7 @@ namespace CSharpAdvanceDesignTests
             //return result;
         }
 
-        public  Employee JoeyLast(IEnumerable<Employee> employees, Func<Employee, bool> predicate)
+        public Employee JoeyLast(IEnumerable<Employee> employees, Func<Employee, bool> predicate)
         {
             var enumerator = employees.GetEnumerator();
             var hasMatch = false;
@@ -56,6 +56,42 @@ namespace CSharpAdvanceDesignTests
             }
 
             return hasMatch ? employee : throw new InvalidOperationException();
+        }
+
+        [Test]
+        public void get_null_when_employee_is_empty()
+        {
+            var employees = new List<Employee>();
+
+            var actual = JoeyLastOrDefault(employees);
+            Assert.IsNull(actual);
+        }
+
+        private Tsource JoeyLastOrDefault<Tsource>(IEnumerable<Tsource> employees)
+        {
+            var enumerator = employees.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return default(Tsource);
+            }
+
+            var last = enumerator.Current;
+            while (enumerator.MoveNext())
+            {
+                last=enumerator.Current;
+            }
+
+            return last;
+
+            //Employee employee = null;
+            //var enumerator = employees.GetEnumerator();
+            //while (enumerator.MoveNext())
+            //{
+            //    var current = enumerator.Current;
+            //    employee = current;
+            //}
+
+            //return employee;
         }
 
         [Test]
