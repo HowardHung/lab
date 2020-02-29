@@ -9,18 +9,22 @@ namespace Lab
         public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
-            var enumerator = source.GetEnumerator();
-            while (enumerator.MoveNext())
-                if (predicate(enumerator.Current))
-                    yield return enumerator.Current;
-        }
+            return JoeyWhere(source, ((x, i) => predicate(x)));
+            //var enumerator = source.GetEnumerator();
+            //while (enumerator.MoveNext())
+            //{
+            //    if (predicate(enumerator.Current))
+            //    {
+            //        yield return enumerator.Current;
+            //    }
+            //}
+            //////////////////////////////
+            //var result = new List<TSource>();
+            //foreach (var item in source)
+            //    if (predicate(item))
+            //        result.Add(item);
 
-
-        public static IEnumerable<TResult> JoeySelect<TSource, TResult>(this IEnumerable<TSource> source,
-            Func<TSource, TResult> selector)
-        {
-            var enumerator = source.GetEnumerator();
-            while (enumerator.MoveNext()) yield return selector(enumerator.Current);
+            //return result;
         }
 
         public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> source,
@@ -37,6 +41,14 @@ namespace Lab
 
             return result;
         }
+
+        public static IEnumerable<TResult> JoeySelect<TSource, TResult>(this IEnumerable<TSource> source,
+            Func<TSource, TResult> selector)
+        {
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext()) yield return selector(enumerator.Current);
+        }
+
 
         public static IEnumerable<TSource> JoeySelect<TSource>(this IEnumerable<TSource> source,
             Func<TSource, int, TSource> predict)
@@ -111,7 +123,6 @@ namespace Lab
             }
 
             return true;
-
         }
 
         public static bool JoeyAny(this IEnumerable<Employee> employees)
@@ -125,11 +136,9 @@ namespace Lab
             while (enumerator.MoveNext())
             {
                 var current = enumerator.Current;
-                if (predicate(current))
-                {
-                    return true;
-                }
+                if (predicate(current)) return true;
             }
+
             return false;
         }
     }

@@ -8,27 +8,7 @@ using NUnit.Framework;
 
 namespace CSharpAdvanceDesignTests
 {
-    public static class LinqExtension
-    {
-        public static IEnumerable<TSource> JoeyWhere<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
-        {
-            var enumerator = source.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                if (predicate(enumerator.Current))
-                {
-                    yield return enumerator.Current;
-                }
-            } 
-            //var result = new List<TSource>();
-            //foreach (var item in source)
-            //    if (predicate(item))
-            //        result.Add(item);
-
-            //return result;
-        }
-    }
-
+    
     [TestFixture]
     public class JoeyWhereTests
     {
@@ -161,4 +141,5 @@ namespace CSharpAdvanceDesignTests
             }
         }
     }
+    
 }
