@@ -14,9 +14,8 @@ namespace CSharpAdvanceDesignTests
     {
         private IEnumerable<Employee> JoeyOrderByLastName(
             IEnumerable<Employee> employees, 
-            IComparer<Employee> combineKeyComparer,
-            Func<Employee, string> secondKeySelector,
-            IComparer<string> secondKeyComparer)
+            IComparer<Employee> firstComparer, 
+            IComparer<Employee> secondComparer)
         {
             var elements = employees.ToList();
             while (elements.Any())
@@ -26,7 +25,7 @@ namespace CSharpAdvanceDesignTests
                 for (var i = 1; i < elements.Count; i++)
                 {
                     var employee = elements[i];
-                    var firstCompareResult = combineKeyComparer.Compare(employee, minElement);
+                    var firstCompareResult = firstComparer.Compare(employee, minElement);
                     if (firstCompareResult < 0)
                     {
                         minElement = employee;
@@ -34,7 +33,7 @@ namespace CSharpAdvanceDesignTests
                     }
                     else if (firstCompareResult == 0)
                     {
-                        if (secondKeyComparer.Compare(secondKeySelector(employee), minElement.FirstName) < 0)
+                        if (secondComparer.Compare(employee, minElement) < 0)
                         {
                             minElement = employee;
                             index = i;
@@ -83,7 +82,9 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"}
             };
 
-            var actual = JoeyOrderByLastName(employees, new CombineKeyComparer(employee => employee.LastName, Comparer<string>.Default), employee => employee.FirstName, Comparer<string>.Default);
+            var actual = JoeyOrderByLastName(employees,
+                new CombineKeyComparer(employee => employee.LastName, Comparer<string>.Default),
+                new CombineKeyComparer(employee => employee.FirstName,Comparer<string>.Default));
 
             var expected = new[]
             {
